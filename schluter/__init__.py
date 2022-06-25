@@ -9,14 +9,8 @@ from typing import Any, Dict, cast
 
 from aiohttp import ClientSession
 
-from .const import (
-    API_APPLICATION_ID,
-    API_AUTH_URL,
-    API_GET_THERMOSTATS_URL,
-    API_SET_TEMPERATURE_URL,
-    HTTP_OK,
-    HTTP_UNAUTHORIZED,
-)
+from .const import (API_APPLICATION_ID, API_AUTH_URL, API_GET_THERMOSTATS_URL,
+                    API_SET_TEMPERATURE_URL, HTTP_OK, HTTP_UNAUTHORIZED)
 
 _LOGGER = logging.getLogger(__name__)
 
