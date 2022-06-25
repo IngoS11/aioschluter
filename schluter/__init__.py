@@ -10,18 +10,18 @@ from typing import Any, Dict, cast
 from aiohttp import ClientSession
 
 from .const import (
+    API_APPLICATION_ID,
     API_AUTH_URL,
     API_GET_THERMOSTATS_URL,
     API_SET_TEMPERATURE_URL,
-    API_APPLICATION_ID,
-    HTTP_UNAUTHORIZED,
     HTTP_OK,
+    HTTP_UNAUTHORIZED,
 )
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class SchluterApi:
+class SchluterApi():
     """Main class to perform Schluter API requests"""
 
     def __init__(
@@ -31,18 +31,18 @@ class SchluterApi:
         session: ClientSession,
     ):
         """Initialize."""
-        self._username = username
-        self._password = password
+        self.username = username
+        self.password = password
         self._session = session
-        self._sessionid = None
+        self.sessionid = None
 
     async def async_validate_user(self):
         """Validate the username and password for the Schluter API"""
         async with self._session.post(
             API_AUTH_URL,
             json={
-                "Email": self._username,
-                "Password": self._password,
+                "Email": self.username,
+                "Password": self.password,
                 "Application": API_APPLICATION_ID,
             },
         ) as resp:
@@ -55,6 +55,7 @@ class SchluterApi:
                 "Data retrieved from %s, status: %s", API_AUTH_URL, resp.status
             )
             data = await resp.json()
+
         if data["SessionId"] == "":
             if data["ErrorCode"] == 1 or data["ErrorCode"] == 2:
                 raise InvalidUserPasswordError("Invalid username or password")
@@ -64,16 +65,16 @@ class SchluterApi:
             )
             raise ApiError("Unknown ErrorCode was returned by Schluter Api")
 
-        self._sessionid = data["SessionId"]
-        return self._sessionid
+        self.sessionid = data["SessionId"]
+        return self.sessionid
 
     async def async_get_current_thermostats(self) -> dict[str, Any]:
         """Get the current settings for all thermostats"""
-        if self._sessionid is None:
+        if self.sessionid is None:
             _LOGGER.debug("Getting Schluter Api session id")
-            self._sessionid = await self.async_validate_user()
+            self.sessionid = await self.async_validate_user()
 
-        params = {"sessionId": self._sessionid}
+        params = {"sessionId": self.sessionid}
         async with self._session.get(API_GET_THERMOSTATS_URL, params=params) as resp:
             if resp.status == HTTP_UNAUTHORIZED:
                 raise InvalidUserPasswordError(
@@ -89,8 +90,13 @@ class SchluterApi:
             )
             data = await resp.json()
         _LOGGER.debug("Stop")
-        groups = data["Groups"]["Thermostats"]
-        return {key: groups[key] for key in groups}
+        groups = data["Groups"]
+
+        for group in groups:
+            for thermostat in group["Thermostats"]:
+                _LOGGER.debug(
+                    f"Found thermostat with serial number: {thermostat['SerialNumber']}, for room: {thermostat['Room']}"
+                )
 
 
 class ApiError(Exception):
