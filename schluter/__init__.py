@@ -76,13 +76,13 @@ class SchluterApi:
         self.sessionid = data["SessionId"]
         return self.sessionid
 
-    async def async_get_current_thermostats(self, sessionId) -> dict[str, Any]:
+    async def async_get_current_thermostats(self, sessionid) -> dict[str, Any]:
         """Get the current settings for all thermostats"""
-        if len(sessionId) == 0:
+        if len(sessionid) == 0:
             raise InvalidSessionIdError("Invalid Session Id")
 
-        self.sessionid = sessionId
-        params = {"sessionId": sessionId}
+        self.sessionid = sessionid
+        params = {"sessionId": sessionid}
         async with self._session.get(API_GET_THERMOSTATS_URL, params=params) as resp:
             if resp.status == HTTP_UNAUTHORIZED:
                 raise InvalidUserPasswordError(
