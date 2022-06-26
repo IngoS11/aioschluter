@@ -9,13 +9,19 @@ from typing import Any, Dict, cast
 
 from aiohttp import ClientSession
 
-from .const import (API_APPLICATION_ID, API_AUTH_URL, API_GET_THERMOSTATS_URL,
-                    API_SET_TEMPERATURE_URL, HTTP_OK, HTTP_UNAUTHORIZED)
+from .const import (
+    API_APPLICATION_ID,
+    API_AUTH_URL,
+    API_GET_THERMOSTATS_URL,
+    API_SET_TEMPERATURE_URL,
+    HTTP_OK,
+    HTTP_UNAUTHORIZED,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class SchluterApi():
+class SchluterApi:
     """Main class to perform Schluter API requests"""
 
     def __init__(
@@ -29,6 +35,13 @@ class SchluterApi():
         self.password = password
         self._session = session
         self.sessionid = None
+
+    @staticmethod
+    def _extract_thermostats_from_groups(groups: dict[str, Any]):
+        for group in groups:
+            _LOGGER.debug(group)
+        return True
+#      return {key: data[key] for key in data}
 
     async def async_validate_user(self):
         """Validate the username and password for the Schluter API"""
@@ -83,14 +96,9 @@ class SchluterApi():
                 resp.status,
             )
             data = await resp.json()
-        _LOGGER.debug("Stop")
+        # extract the thermostat groups from data
         groups = data["Groups"]
-
-        for group in groups:
-            for thermostat in group["Thermostats"]:
-                _LOGGER.debug(
-                    f"Found thermostat with serial number: {thermostat['SerialNumber']}, for room: {thermostat['Room']}"
-                )
+        return self._extract_thermostats_from_groups(groups)
 
 
 class ApiError(Exception):

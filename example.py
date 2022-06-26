@@ -2,8 +2,7 @@ import asyncio
 import logging
 
 from aiohttp import ClientError, ClientSession
-
-from schluter import ApiError, SchluterApi
+from schluter import ApiError, SchluterApi, InvalidUserPasswordError
 
 ## specify the username and password that you have on the Schluter DITRA-HEATER-E-WIFI
 ## site at https://ditra-heat-e-wifi.schluter.com/
@@ -24,6 +23,7 @@ async def main():
         except (
             ApiError,
             ClientError,
+            InvalidUserPasswordError,
         ) as error:
             print(f"Error: {error}")
         else:

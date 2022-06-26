@@ -13,6 +13,7 @@ INVALID_USERNAME = "invalid_user@someplace.org"
 VALID_PASSWORD = "somevalidpassword"
 INVALID_PASSWORD = "someinvalidpassword"
 
+
 @pytest.mark.asyncio
 async def test_valid_user():
     """Test with valid username"""
@@ -37,6 +38,7 @@ async def test_valid_user():
     await websession.close()
     assert sessionid == "85j7W9xNTku1bqDb4SCnPA"
     assert schluter.sessionid == "85j7W9xNTku1bqDb4SCnPA"
+
 
 @pytest.mark.asyncio
 async def test_invalid_user():
@@ -63,6 +65,7 @@ async def test_invalid_user():
     assert schluter.sessionid is None
     assert sessionid is None
 
+
 @pytest.mark.asyncio
 async def test_invalid_password():
     """Test with valid user and invalid password"""
@@ -79,7 +82,7 @@ async def test_invalid_password():
             payload=logon_data,
         )
         schluter = SchluterApi(VALID_USERNAME, INVALID_PASSWORD, websession)
-        try: 
+        try:
             sessionid = await schluter.async_validate_user()
         except InvalidUserPasswordError as ex:
             assert True, f"Raised InvalidUserPasswordError exception {ex}"
@@ -87,6 +90,7 @@ async def test_invalid_password():
     await websession.close()
     assert schluter.sessionid is None
     assert sessionid is None
+
 
 @pytest.mark.asyncio
 async def test_get_current_thermostats():
