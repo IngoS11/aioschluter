@@ -5,7 +5,7 @@ Async Python wrapper for the [Schluter-DITRA-E-WIFI thermostats API](https://dit
 To create a user for you thermostats visit [Schluter-DITRA-E-WIFI thermostats API](https://ditra-heat-e-wifi.schluter.com/)
 
 ## Basic Example
-```
+```python
 import asyncio
 import logging
 
