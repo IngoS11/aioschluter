@@ -1,8 +1,8 @@
 # Schluter API Python wrapper
-Async Python wrapper for the [Schluter-DITRA-E-WIFI thermostats API](https://ditra-heat-e-wifi.schluter.com/)
+An async Python wrapper for the [Schluter-DITRA-E-WIFI](https://www.schluter.com/schluter-us/en_US/ditra-heat-wifi) Wi-Fi Themostat
 
 ## User
-To create a user for you thermostats visit [Schluter-DITRA-E-WIFI thermostats API](https://ditra-heat-e-wifi.schluter.com/)
+Create a user for your thermostats at [https://ditra-heat-e-wifi.schluter.com/](https://ditra-heat-e-wifi.schluter.com/)
 
 ## Basic Example
 ```python
@@ -28,7 +28,9 @@ async def main():
                 SCHLUTER_PASSWORD,
                 websession
             )
+            # Login to the Schluter API to get a session id
             sessionid = await schluter.async_login()
+            # Retreive your currently configured thermostats
             thermostats = await schluter.async_get_current_thermostats(sessionid)
         except (
             ApiError,
