@@ -12,6 +12,7 @@ from .const import (
     API_APPLICATION_ID,
     API_AUTH_URL,
     API_GET_THERMOSTATS_URL,
+    API_SET_TEMPERATURE_URL,
     HTTP_OK,
     HTTP_UNAUTHORIZED,
 )
@@ -75,13 +76,13 @@ class SchluterApi:
         self.sessionid = data["SessionId"]
         return self.sessionid
 
-    async def async_get_current_thermostats(self, sessionid) -> dict[str, Any]:
+    async def async_get_current_thermostats(self, sessionId) -> dict[str, Any]:
         """Get the current settings for all thermostats"""
-        if len(sessionid) == 0:
+        if len(sessionId) == 0:
             raise InvalidSessionIdError("Invalid Session Id")
 
-        self.sessionid = sessionid
-        params = {"sessionId": sessionid}
+        self.sessionid = sessionId
+        params = {"sessionId": sessionId}
         async with self._session.get(API_GET_THERMOSTATS_URL, params=params) as resp:
             if resp.status == HTTP_UNAUTHORIZED:
                 raise InvalidUserPasswordError(
@@ -97,6 +98,37 @@ class SchluterApi:
             )
             data = await resp.json()
         return self._extract_thermostats_from_data(data)
+
+    async def async_set_temperature(self, sessionid, serialnumber, temperature) -> bool:
+        """Set the temperature for a thermostat"""
+        if len(sessionid) == 0:
+            raise InvalidSessionIdError("Invalid Session Id")
+
+        self.sessionid = sessionid
+        adjusted_temp = int(temperature * 100)
+        params = {"sessionId": sessionid, "serialnumber": serialnumber}
+
+        async with self._session.post(
+            API_SET_TEMPERATURE_URL,
+            params=params,
+            json={
+                "ManualTemperature": adjusted_temp,
+                "RegulationMode": 3,
+                "VacationEnabled": False,
+            },
+        ) as resp:
+            if resp.status == HTTP_UNAUTHORIZED:
+                raise InvalidUserPasswordError("Invalid username or password")
+            if resp.status != HTTP_OK:
+                raise ApiError(f"Invalid Response from Schluter API: {resp.status}")
+
+            _LOGGER.debug(
+                "Temperature set via %s, status: %s",
+                API_SET_TEMPERATURE_URL,
+                resp.status,
+            )
+            data = await resp.json()
+        return data["Success"]
 
 
 class ApiError(Exception):
