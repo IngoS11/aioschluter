@@ -34,9 +34,6 @@ jobs:
       - name: Check with Black Code Formatter
         run: |
           black schluter tests --check
-      - name: Lint with flake8
-        run: |
-          flake8 schluter tests
       - name: Lint with pylint
         run: |
           pylint schluter tests

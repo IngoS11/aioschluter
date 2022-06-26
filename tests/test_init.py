@@ -1,7 +1,6 @@
 """Tests for aioschluter package."""
 import json
 
-import aiohttp
 import pytest
 from aiohttp import ClientSession
 from aioresponses import aioresponses
@@ -20,7 +19,7 @@ async def test_valid_user():
     with open("tests/fixtures/valid_user_data.json", encoding="utf-8") as file:
         logon_data = json.load(file)
 
-    websession = aiohttp.ClientSession()
+    websession = ClientSession()
     sessionid = None
 
     with aioresponses() as session_mock:
@@ -31,7 +30,7 @@ async def test_valid_user():
         )
         schluter = SchluterApi(VALID_USERNAME, VALID_PASSWORD, websession)
         try:
-            sessionid = await schluter.async_validate_user()
+            sessionid = await schluter.async_login()
         except InvalidUserPasswordError as ex:
             assert False, f"Raised InvalidUserPasswordError exception {ex}"
 
@@ -46,7 +45,7 @@ async def test_invalid_user():
     with open("tests/fixtures/invalid_user_data.json", encoding="utf-8") as file:
         logon_data = json.load(file)
 
-    websession = aiohttp.ClientSession()
+    websession = ClientSession()
     sessionid = None
 
     with aioresponses() as session_mock:
@@ -57,7 +56,7 @@ async def test_invalid_user():
         )
         schluter = SchluterApi(INVALID_USERNAME, INVALID_PASSWORD, websession)
         try:
-            sessionid = await schluter.async_validate_user()
+            sessionid = await schluter.async_login()
         except InvalidUserPasswordError as ex:
             assert True, f"Raised InvalidUserPasswordError exception {ex}"
 
@@ -72,7 +71,7 @@ async def test_invalid_password():
     with open("tests/fixtures/invalid_password_data.json", encoding="utf-8") as file:
         logon_data = json.load(file)
 
-    websession = aiohttp.ClientSession()
+    websession = ClientSession()
     sessionid = None
 
     with aioresponses() as session_mock:
@@ -83,7 +82,7 @@ async def test_invalid_password():
         )
         schluter = SchluterApi(VALID_USERNAME, INVALID_PASSWORD, websession)
         try:
-            sessionid = await schluter.async_validate_user()
+            sessionid = await schluter.async_login()
         except InvalidUserPasswordError as ex:
             assert True, f"Raised InvalidUserPasswordError exception {ex}"
 
@@ -95,4 +94,24 @@ async def test_invalid_password():
 @pytest.mark.asyncio
 async def test_get_current_thermostats():
     """Test valid current thermostat data"""
-    pass
+    with open("tests/fixtures/thermostats_data.json", encoding="utf-8") as file:
+        thermostat_data = json.load(file)
+
+    websession = ClientSession()
+    thermostats = {}
+
+    with aioresponses() as session_mock:
+        # pylint:disable=line-too-long
+        session_mock.get(
+            "https://ditra-heat-e-wifi.schluter.com/api/thermostats?sessionId=abcd12345456",
+            payload=thermostat_data,
+        )
+        schluter = SchluterApi(VALID_USERNAME, VALID_PASSWORD, websession)
+        sessionid = "abcd12345456"
+        try:
+            thermostats = await schluter.async_get_current_thermostats(sessionid)
+        except InvalidUserPasswordError as ex:
+            assert False, f"Raised InvalidUserPasswordError exception {ex}"
+
+    await websession.close()
+    assert thermostats["1084135"].name == "Bathroom"

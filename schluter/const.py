@@ -1,3 +1,5 @@
+""" constants for aioschluter """
+
 API_BASE_URL = "https://ditra-heat-e-wifi.schluter.com"
 API_AUTH_URL = API_BASE_URL + "/api/authenticate/user"
 API_GET_THERMOSTATS_URL = API_BASE_URL + "/api/thermostats"

@@ -3,20 +3,14 @@ Async Python wrapper to get data from schluter ditra heat thermostats via the
 Schluter DITRA-HEATER-E-WIFI Api
 """
 
-import json
 import logging
-from typing import Any, Dict, cast
+from typing import Any
 
 from aiohttp import ClientSession
 
-from .const import (
-    API_APPLICATION_ID,
-    API_AUTH_URL,
-    API_GET_THERMOSTATS_URL,
-    API_SET_TEMPERATURE_URL,
-    HTTP_OK,
-    HTTP_UNAUTHORIZED,
-)
+from .const import (API_APPLICATION_ID, API_AUTH_URL, API_GET_THERMOSTATS_URL,
+                    HTTP_OK, HTTP_UNAUTHORIZED)
+from .thermostat import Thermostat
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -37,13 +31,14 @@ class SchluterApi:
         self.sessionid = None
 
     @staticmethod
-    def _extract_thermostats_from_groups(groups: dict[str, Any]):
-        for group in groups:
-            _LOGGER.debug(group)
-        return True
-#      return {key: data[key] for key in data}
+    def _extract_thermostats_from_data(data: dict[str, Any]) -> dict[str, Any]:
+        thermostats = {}
+        for group in data["Groups"]:
+            for tdata in group["Thermostats"]:
+                thermostats[tdata["SerialNumber"]] = Thermostat(tdata)
+        return thermostats
 
-    async def async_validate_user(self):
+    async def async_login(self):
         """Validate the username and password for the Schluter API"""
         async with self._session.post(
             API_AUTH_URL,
@@ -75,20 +70,20 @@ class SchluterApi:
         self.sessionid = data["SessionId"]
         return self.sessionid
 
-    async def async_get_current_thermostats(self) -> dict[str, Any]:
+    async def async_get_current_thermostats(self, sessionid) -> dict[str, Any]:
         """Get the current settings for all thermostats"""
-        if self.sessionid is None:
-            _LOGGER.debug("Getting Schluter Api session id")
-            self.sessionid = await self.async_validate_user()
+        if len(sessionid) == 0:
+            raise InvalidSessionIdError("Invalid Session Id")
 
-        params = {"sessionId": self.sessionid}
+        self.sessionid = sessionid
+        params = {"sessionId": sessionid}
         async with self._session.get(API_GET_THERMOSTATS_URL, params=params) as resp:
             if resp.status == HTTP_UNAUTHORIZED:
                 raise InvalidUserPasswordError(
-                    f"Invalid session id supplied when calling Schluter Api : {resp.status}"
+                    f"Invalid session id supplied: {resp.status}"
                 )
             if resp.status != HTTP_OK:
-                raise ApiError(f"Invalid Response from Schluter Api: {resp.status}")
+                raise ApiError(f"Invalid Response: {resp.status}")
 
             _LOGGER.debug(
                 "Data retrieved from %s, status: %s",
@@ -96,9 +91,7 @@ class SchluterApi:
                 resp.status,
             )
             data = await resp.json()
-        # extract the thermostat groups from data
-        groups = data["Groups"]
-        return self._extract_thermostats_from_groups(groups)
+        return self._extract_thermostats_from_data(data)
 
 
 class ApiError(Exception):
@@ -112,6 +105,15 @@ class ApiError(Exception):
 
 class InvalidUserPasswordError(Exception):
     """Raise when Username is incorrect"""
+
+    def __init__(self, status: str) -> None:
+        """Initialize."""
+        super().__init__(status)
+        self.status = status
+
+
+class InvalidSessionIdError(Exception):
+    """Raise when the Schluter Session Id is missing"""
 
     def __init__(self, status: str) -> None:
         """Initialize."""

@@ -2,7 +2,8 @@ import asyncio
 import logging
 
 from aiohttp import ClientError, ClientSession
-from schluter import ApiError, SchluterApi, InvalidUserPasswordError
+
+from schluter import ApiError, InvalidUserPasswordError, SchluterApi
 
 ## specify the username and password that you have on the Schluter DITRA-HEATER-E-WIFI
 ## site at https://ditra-heat-e-wifi.schluter.com/
@@ -19,7 +20,8 @@ async def main():
                 SCHLUTER_PASSWORD,
                 websession
             )
-            thermostats = await schluter.async_get_current_thermostats()
+            sessionid = await schluter.async_login()
+            thermostats = await schluter.async_get_current_thermostats(sessionid)
         except (
             ApiError,
             ClientError,
@@ -27,7 +29,8 @@ async def main():
         ) as error:
             print(f"Error: {error}")
         else:
-            print(f"Thermostats: {thermostats}")
+            for thermostat in thermostats.values():
+                print(thermostat)
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
