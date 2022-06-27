@@ -5,7 +5,7 @@ import pytest
 from aiohttp import ClientSession
 from aioresponses import aioresponses
 
-from schluter import InvalidUserPasswordError, SchluterApi, InvalidSessionIdError
+from aioschluter import InvalidUserPasswordError, SchluterApi, InvalidSessionIdError
 
 VALID_USERNAME = "valid_user@someplace.org"
 INVALID_USERNAME = "invalid_user@someplace.org"

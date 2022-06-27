@@ -30,13 +30,13 @@ jobs:
           pip install -r requirements.txt -r requirements-test.txt
       - name: Check with Black Code Formatter
         run: |
-          black schluter tests --check
+          black aioschluter tests --check
       - name: Lint with pylint
         run: |
-          pylint schluter tests
+          pylint aioschluter tests
       - name: Test with mypy
         run: |
-          mypy schluter
+          mypy aioschluter
       - name: Test with pytest
         run: |
           python setup.py test

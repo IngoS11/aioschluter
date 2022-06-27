@@ -3,7 +3,7 @@ import logging
 
 from aiohttp import ClientError, ClientSession
 
-from schluter import ApiError, InvalidUserPasswordError, SchluterApi
+from aioschluter import ApiError, InvalidUserPasswordError, SchluterApi
 
 ## specify the username and password that you have on the Schluter DITRA-HEATER-E-WIFI
 ## site at https://ditra-heat-e-wifi.schluter.com/
