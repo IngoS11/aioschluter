@@ -4,6 +4,12 @@ An async Python wrapper for the [Schluter-DITRA-E-WIFI](https://www.schluter.com
 ## User
 Create a user for your thermostats at [https://ditra-heat-e-wifi.schluter.com/](https://ditra-heat-e-wifi.schluter.com/)
 
+## Install
+Install the most recent version of the library from [Python Package Index](http://pypi.org)
+```
+pip install aioschluter
+```
+
 ## Basic Example
 ```python
 import asyncio
