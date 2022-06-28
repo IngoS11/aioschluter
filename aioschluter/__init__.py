@@ -4,7 +4,7 @@ Schluter DITRA-HEATER-E-WIFI Api
 """
 
 import logging
-from typing import Any
+from typing import Optional, Any
 
 from aiohttp import ClientSession
 
@@ -29,10 +29,10 @@ class SchluterApi:
         session: ClientSession,
     ):
         """Initialize."""
-        self._username = None
-        self._password = None
+        self._username: Optional[str]= None
+        self._password: Optional[str] = None
         self._session = session
-        self._sessionid = None
+        self._sessionid: Optional[str]= None
 
     @property
     def username(self):
@@ -57,7 +57,7 @@ class SchluterApi:
                 thermostats[tdata["SerialNumber"]] = Thermostat(tdata)
         return thermostats
 
-    async def async_get_sessionid(self, username, password):
+    async def async_get_sessionid(self, username, password) -> Optional[str]:
         """Validate the username and password for the Schluter API"""
 
         self._username = username

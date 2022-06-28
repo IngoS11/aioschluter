@@ -123,29 +123,29 @@ async def test_get_current_thermostats():
     assert thermostats["1084135"].name == "Bathroom"
 
 
-# @pytest.mark.asyncio
-# async def test_success_set_temperature():
-#    """ Test setting the temerature of a specific thermostat"""
-#    with open("tests/fixtures/temperature_set_data.json", encoding="utf-8") as file:
-#        success_data = json.load(file)
+#@pytest.mark.asyncio
+#async def test_success_set_temperature():
+#   """ Test setting the temerature of a specific thermostat"""
+#   with open("tests/fixtures/temperature_set_data.json", encoding="utf-8") as file:
+#       success_data = json.load(file)
 #
-#    websession = ClientSession
-#    sessionid = "abcd12345456"
-#    serialnumber = "abcd12245"
-#    temperature = 22.5
+#   websession = ClientSession
+#   sessionid = "abcd12345456"
+#   serialnumber = "abcd12245"
+#   temperature = 22.5
 #
-#    with aioresponses() as session_mock:
-#        #pylint:disable=line-too-long
-#        session_mock.post(
-#            f"https://ditra-heat-e-wifi.schluter.com/api/thermostat?sessionId={sessionid}&serialnumber={serialnumber}",
-#            payload=success_data,
-#        )
-#        schluter = SchluterApi(websession)
+#   with aioresponses() as session_mock:
+#       #pylint:disable=line-too-long
+#       session_mock.post(
+#           f"https://ditra-heat-e-wifi.schluter.com/api/thermostat?sessionId={sessionid}&serialnumber={serialnumber}",
+#           payload=success_data,
+#       )
+#       schluter = SchluterApi(websession)
 #
-#        try:
-#            res = await schluter.async_set_temperature(sessionid, serialnumber, temperature)
-#        except InvalidSessionIdError as ex:
-#            assert False, f"Raised InvalidSessionIdError exception {ex}"
+#       try:
+#           res = await schluter.async_set_temperature(sessionid, serialnumber, temperature)
+#       except InvalidSessionIdError as ex:
+#           assert False, f"Raised InvalidSessionIdError exception {ex}"
 #
-#    await websession.close()
-#    assert res is True
+#   await websession.close()
+#   assert res is True
