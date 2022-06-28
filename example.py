@@ -24,8 +24,7 @@ async def main():
             schluter = SchluterApi(websession)
 
             sessionid = await schluter.async_get_sessionid(
-                SCHLUTER_USERNAME,
-                SCHLUTER_PASSWORD,
+                SCHLUTER_USERNAME, SCHLUTER_PASSWORD
             )
             thermostats = await schluter.async_get_current_thermostats(sessionid)
         except (
