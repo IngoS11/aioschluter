@@ -20,12 +20,12 @@ logging.basicConfig(level=logging.DEBUG)
 async def main():
     async with ClientSession() as websession:
         try:
-            schluter = SchluterApi(
-                SCHLUTER_USERNAME,
-                SCHLUTER_PASSWORD,
-                websession
+            schluter = SchluterApi(websession)
+
+            sessionid = await schluter.async_login(
+                    SCHLUTER_USERNAME,
+                    SCHLUTER_PASSWORD,
             )
-            sessionid = await schluter.async_login()
             thermostats = await schluter.async_get_current_thermostats(sessionid)
         except (
             ApiError,

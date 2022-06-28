@@ -28,9 +28,11 @@ async def test_valid_user():
             "https://ditra-heat-e-wifi.schluter.com/api/authenticate/user",
             payload=logon_data,
         )
-        schluter = SchluterApi(VALID_USERNAME, VALID_PASSWORD, websession)
+        schluter = SchluterApi(websession)
         try:
-            sessionid = await schluter.async_login()
+            sessionid = await schluter.async_get_sessionid(
+                VALID_USERNAME, VALID_PASSWORD
+            )
         except InvalidUserPasswordError as ex:
             assert False, f"Raised InvalidUserPasswordError exception {ex}"
 
@@ -54,9 +56,11 @@ async def test_invalid_user():
             "https://ditra-heat-e-wifi.schluter.com/api/authenticate/user",
             payload=logon_data,
         )
-        schluter = SchluterApi(INVALID_USERNAME, INVALID_PASSWORD, websession)
+        schluter = SchluterApi(websession)
         try:
-            sessionid = await schluter.async_login()
+            sessionid = await schluter.async_get_sessionid(
+                INVALID_USERNAME, INVALID_PASSWORD
+            )
         except InvalidUserPasswordError as ex:
             assert True, f"Raised InvalidUserPasswordError exception {ex}"
 
@@ -80,9 +84,11 @@ async def test_invalid_password():
             "https://ditra-heat-e-wifi.schluter.com/api/authenticate/user",
             payload=logon_data,
         )
-        schluter = SchluterApi(VALID_USERNAME, INVALID_PASSWORD, websession)
+        schluter = SchluterApi(websession)
         try:
-            sessionid = await schluter.async_login()
+            sessionid = await schluter.async_get_sessionid(
+                VALID_USERNAME, INVALID_PASSWORD
+            )
         except InvalidUserPasswordError as ex:
             assert True, f"Raised InvalidUserPasswordError exception {ex}"
 
@@ -134,7 +140,7 @@ async def test_get_current_thermostats():
 #            f"https://ditra-heat-e-wifi.schluter.com/api/thermostat?sessionId={sessionid}&serialnumber={serialnumber}",
 #            payload=success_data,
 #        )
-#        schluter = SchluterApi(VALID_USERNAME, VALID_PASSWORD, websession)
+#        schluter = SchluterApi(websession)
 #
 #        try:
 #            res = await schluter.async_set_temperature(sessionid, serialnumber, temperature)

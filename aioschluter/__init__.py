@@ -34,7 +34,7 @@ class SchluterApi:
         self.username = username
         self.password = password
         self._session = session
-        self.sessionid = None
+        self.sessionid: str = None
 
     @staticmethod
     def _extract_thermostats_from_data(data: dict[str, Any]) -> dict[str, Any]:
@@ -44,13 +44,13 @@ class SchluterApi:
                 thermostats[tdata["SerialNumber"]] = Thermostat(tdata)
         return thermostats
 
-    async def async_login(self):
+    async def async_get_sessionid(self, username: str, password: str) -> str:
         """Validate the username and password for the Schluter API"""
         async with self._session.post(
             API_AUTH_URL,
             json={
-                "Email": self.username,
-                "Password": self.password,
+                "Email": username,
+                "Password": password,
                 "Application": API_APPLICATION_ID,
             },
         ) as resp:
