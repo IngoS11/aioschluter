@@ -29,10 +29,10 @@ class SchluterApi:
         session: ClientSession,
     ):
         """Initialize."""
-        self._username: Optional[str]= None
+        self._username: Optional[str] = None
         self._password: Optional[str] = None
         self._session = session
-        self._sessionid: Optional[str]= None
+        self._sessionid: Optional[str] = None
 
     @property
     def username(self):
