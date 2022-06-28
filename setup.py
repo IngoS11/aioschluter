@@ -7,12 +7,12 @@ with open("README.md", encoding="utf-8") as file:
 with open("requirements.txt", encoding="utf-8") as file:
     install_requires = list(val.strip() for val in file.readlines())
 
-with open("requirements-test.txt", encoding="utf-8") as file:
+with open("requirements_test.txt", encoding="utf-8") as file:
     tests_require = list(val.strip() for val in file.readlines())
 
 setup(
     name="aioschluter",
-    version="0.1.1",
+    version="0.1.2",
     author="Ingo Sauerzapf ",
     description="Async Python wrapper for the Schluter-DITRA-E-WIFI thermostats API.",
     long_description=long_description,
