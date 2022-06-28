@@ -17,7 +17,12 @@ import logging
 
 from aiohttp import ClientError, ClientSession
 
-from aioschluter import ApiError, InvalidUserPasswordError, SchluterApi
+from aioschluter import (
+    ApiError,
+    InvalidUserPasswordError,
+    InvalidSessionIdError,
+    SchluterApi
+)
 
 ## specify the username and password that you have on the Schluter DITRA-HEATER-E-WIFI
 ## site at https://ditra-heat-e-wifi.schluter.com/
@@ -34,14 +39,13 @@ async def main():
                 SCHLUTER_PASSWORD,
                 websession
             )
-            # Login to the Schluter API to get a session id
             sessionid = await schluter.async_login()
-            # Retreive your currently configured thermostats
             thermostats = await schluter.async_get_current_thermostats(sessionid)
         except (
             ApiError,
             ClientError,
             InvalidUserPasswordError,
+            InvalidSessionIdError,
         ) as error:
             print(f"Error: {error}")
         else:
