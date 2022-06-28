@@ -24,6 +24,9 @@ _LOGGER = logging.getLogger(__name__)
 class SchluterApi:
     """Main class to perform Schluter API requests"""
 
+    # Disable the Alternative Union Syntax, in 3.10
+    # pylint: disable=consider-alternative-union-syntax
+
     def __init__(
         self,
         session: ClientSession,
