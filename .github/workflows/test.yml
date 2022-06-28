@@ -27,10 +27,13 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt -r requirements-test.txt
+          pip install -r requirements.txt -r requirements_test.txt
       - name: Check with Black Code Formatter
         run: |
           black aioschluter tests --check
+      - name: Check with Flake8
+        run: |
+          pre-commit run flake8 --all-files
       - name: Lint with pylint
         run: |
           pylint aioschluter tests

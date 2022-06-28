@@ -7,7 +7,7 @@ with open("README.md", encoding="utf-8") as file:
 with open("requirements.txt", encoding="utf-8") as file:
     install_requires = list(val.strip() for val in file.readlines())
 
-with open("requirements-test.txt", encoding="utf-8") as file:
+with open("requirements_test.txt", encoding="utf-8") as file:
     tests_require = list(val.strip() for val in file.readlines())
 
 setup(
