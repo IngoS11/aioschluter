@@ -26,15 +26,28 @@ class SchluterApi:
 
     def __init__(
         self,
-        username: str,
-        password: str,
         session: ClientSession,
     ):
         """Initialize."""
-        self.username = username
-        self.password = password
+        self._username = None
+        self._password = None
         self._session = session
-        self.sessionid: str = None
+        self._sessionid = None
+
+    @property
+    def username(self):
+        """Username"""
+        return self._username
+
+    @property
+    def password(self):
+        """Password"""
+        return self._password
+
+    @property
+    def sessionid(self):
+        """SessionId"""
+        return self._sessionid
 
     @staticmethod
     def _extract_thermostats_from_data(data: dict[str, Any]) -> dict[str, Any]:
@@ -44,8 +57,12 @@ class SchluterApi:
                 thermostats[tdata["SerialNumber"]] = Thermostat(tdata)
         return thermostats
 
-    async def async_get_sessionid(self, username: str, password: str) -> str:
+    async def async_get_sessionid(self, username, password):
         """Validate the username and password for the Schluter API"""
+
+        self._username = username
+        self._password = password
+
         async with self._session.post(
             API_AUTH_URL,
             json={
@@ -73,15 +90,15 @@ class SchluterApi:
             )
             raise ApiError("Unknown ErrorCode was returned by Schluter Api")
 
-        self.sessionid = data["SessionId"]
-        return self.sessionid
+        self._sessionid = data["SessionId"]
+        return self._sessionid
 
     async def async_get_current_thermostats(self, sessionid) -> dict[str, Any]:
         """Get the current settings for all thermostats"""
         if len(sessionid) == 0:
             raise InvalidSessionIdError("Invalid Session Id")
 
-        self.sessionid = sessionid
+        self._sessionid = sessionid
         params = {"sessionId": sessionid}
         async with self._session.get(API_GET_THERMOSTATS_URL, params=params) as resp:
             if resp.status == HTTP_UNAUTHORIZED:
@@ -104,7 +121,7 @@ class SchluterApi:
         if len(sessionid) == 0:
             raise InvalidSessionIdError("Invalid Session Id")
 
-        self.sessionid = sessionid
+        self._sessionid = sessionid
         adjusted_temp = int(temperature * 100)
         params = {"sessionId": sessionid, "serialnumber": serialnumber}
 

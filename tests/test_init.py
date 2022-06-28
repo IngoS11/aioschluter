@@ -113,7 +113,7 @@ async def test_get_current_thermostats():
             f"https://ditra-heat-e-wifi.schluter.com/api/thermostats?sessionId={sessionid}",
             payload=thermostat_data,
         )
-        schluter = SchluterApi(VALID_USERNAME, VALID_PASSWORD, websession)
+        schluter = SchluterApi(websession)
         try:
             thermostats = await schluter.async_get_current_thermostats(sessionid)
         except InvalidSessionIdError as ex:

@@ -22,7 +22,7 @@ async def main():
         try:
             schluter = SchluterApi(websession)
 
-            sessionid = await schluter.async_login(
+            sessionid = await schluter.async_get_sessionid(
                     SCHLUTER_USERNAME,
                     SCHLUTER_PASSWORD,
             )
