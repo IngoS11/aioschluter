@@ -105,8 +105,8 @@ class SchluterApi:
         params = {"sessionId": sessionid}
         async with self._session.get(API_GET_THERMOSTATS_URL, params=params) as resp:
             if resp.status == HTTP_UNAUTHORIZED:
-                raise InvalidUserPasswordError(
-                    f"Invalid session id supplied: {resp.status}"
+                raise InvalidSessionIdError(
+                    "An invalid or expired sessionid was supplied"
                 )
             if resp.status != HTTP_OK:
                 raise ApiError(f"Invalid Response: {resp.status}")
@@ -138,7 +138,9 @@ class SchluterApi:
             },
         ) as resp:
             if resp.status == HTTP_UNAUTHORIZED:
-                raise InvalidUserPasswordError("Invalid username or password")
+                raise InvalidSessionIdError(
+                    "An invalid or expired sessionid was supplied"
+                )
             if resp.status != HTTP_OK:
                 raise ApiError(f"Invalid Response from Schluter API: {resp.status}")
 
