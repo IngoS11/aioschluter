@@ -129,6 +129,7 @@ async def test_get_current_thermostats():
 
 def unauthorized_callback(url, **kwargs):
     """Simulate UNAUTHRIZE(401) status code."""
+    # pylint: disable=unused-argument
     return CallbackResult(status=401)
 
 
