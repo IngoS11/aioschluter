@@ -127,7 +127,8 @@ async def test_get_current_thermostats():
     assert thermostats["1084135"].name == "Bathroom"
 
 
-def wrong_session_callback(url, **kwargs):
+def unauthorized_callback(url, **kwargs):
+    """Simulate UNAUTHRIZE(401) status code."""
     return CallbackResult(status=401)
 
 
@@ -145,7 +146,7 @@ async def test_get_current_thermostats_with_wrong_sessionid():
         session_mock.get(
             f"https://ditra-heat-e-wifi.schluter.com/api/thermostats?sessionId={sessionid}",  # noqa: E501
             payload=thermostat_data,
-            callback=wrong_session_callback,
+            callback=unauthorized_callback,
         )
         schluter = SchluterApi(websession)
         try:
