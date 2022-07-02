@@ -5,8 +5,8 @@ from aiohttp import ClientError, ClientSession
 
 from aioschluter import (
     ApiError,
-    InvalidUserPasswordError,
     InvalidSessionIdError,
+    InvalidUserPasswordError,
     SchluterApi,
 )
 

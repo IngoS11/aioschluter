@@ -1,16 +1,12 @@
 """Tests for aioschluter package."""
 import json
+from datetime import datetime
 
 import pytest
-from datetime import datetime
 from aiohttp import ClientSession
-from aioresponses import aioresponses, CallbackResult
+from aioresponses import CallbackResult, aioresponses
 
-from aioschluter import (
-    InvalidUserPasswordError,
-    SchluterApi,
-    InvalidSessionIdError,
-)
+from aioschluter import InvalidSessionIdError, InvalidUserPasswordError, SchluterApi
 
 VALID_USERNAME = "valid_user@someplace.org"
 INVALID_USERNAME = "invalid_user@someplace.org"

@@ -2,7 +2,7 @@
 
 import logging
 from datetime import datetime
-from typing import Optional, Any
+from typing import Any, Optional
 
 from aiohttp import ClientSession
 
