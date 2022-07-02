@@ -10,14 +10,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-
+  code_quality:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 2
       matrix:
         python-version: ["3.9", "3.10"]
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -39,7 +37,15 @@ jobs:
           pylint aioschluter tests
       - name: Test with mypy
         run: |
-          mypy aioschluter
+          mypy --ignore-missing-imports --follow-imports=silent --warn-unused-ignores aioschluter
       - name: Test with pytest
         run: |
           python setup.py test
+  bandit:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v2"
+      - name: Bandit Check (Python security linter)
+        uses: jpetrucciani/bandit-check@master
+        with:
+          path: '/custom_components/schluter/'

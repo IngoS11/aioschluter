@@ -3,7 +3,7 @@ import json
 
 import pytest
 from aiohttp import ClientSession
-from aioresponses import aioresponses
+from aioresponses import aioresponses, CallbackResult
 
 from aioschluter import (
     InvalidUserPasswordError,
@@ -125,6 +125,37 @@ async def test_get_current_thermostats():
 
     await websession.close()
     assert thermostats["1084135"].name == "Bathroom"
+
+
+def unauthorized_callback(url, **kwargs):
+    """Simulate UNAUTHRIZE(401) status code."""
+    # pylint: disable=unused-argument
+    return CallbackResult(status=401)
+
+
+@pytest.mark.asyncio
+async def test_get_current_thermostats_with_wrong_sessionid():
+    """Test invalid call to current thermostat data."""
+    with open("tests/fixtures/thermostats_data.json", encoding="utf-8") as file:
+        thermostat_data = json.load(file)
+
+    websession = ClientSession()
+    sessionid = "abcd12345456"
+
+    with aioresponses() as session_mock:
+        # pylint:disable=line-too-long
+        session_mock.get(
+            f"https://ditra-heat-e-wifi.schluter.com/api/thermostats?sessionId={sessionid}",  # noqa: E501
+            payload=thermostat_data,
+            callback=unauthorized_callback,
+        )
+        schluter = SchluterApi(websession)
+        try:
+            await schluter.async_get_current_thermostats(sessionid)
+        except InvalidSessionIdError as ex:
+            assert True, f"Raised InvalidSessionIdError exception {ex}"
+
+    await websession.close()
 
 
 # @pytest.mark.asyncio
