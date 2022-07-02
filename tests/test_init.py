@@ -2,6 +2,7 @@
 import json
 
 import pytest
+from datetime import datetime
 from aiohttp import ClientSession
 from aioresponses import aioresponses, CallbackResult
 
@@ -43,6 +44,7 @@ async def test_valid_user():
     await websession.close()
     assert sessionid == "85j7W9xNTku1bqDb4SCnPA"
     assert schluter.sessionid == "85j7W9xNTku1bqDb4SCnPA"
+    assert isinstance(schluter.sessionid_timestamp, datetime)
 
 
 @pytest.mark.asyncio

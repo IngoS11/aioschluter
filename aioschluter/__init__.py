@@ -1,9 +1,7 @@
-"""
-Async Python wrapper to get data from schluter ditra heat thermostats via the
-Schluter DITRA-HEATER-E-WIFI Api
-"""
+"""Async Python wrapper to get data from schluter ditra heat thermostats."""
 
 import logging
+from datetime import datetime
 from typing import Optional, Any
 
 from aiohttp import ClientSession
@@ -22,7 +20,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class SchluterApi:
-    """Main class to perform Schluter API requests"""
+    """Main class to perform Schluter API requests."""
 
     # Disable the Alternative Union Syntax, in 3.10
     # pylint: disable=consider-alternative-union-syntax
@@ -36,21 +34,27 @@ class SchluterApi:
         self._password: Optional[str] = None
         self._session = session
         self._sessionid: Optional[str] = None
+        self._sessionid_timestamp: Optional[datetime] = None
 
     @property
     def username(self):
-        """Username"""
+        """Username."""
         return self._username
 
     @property
     def password(self):
-        """Password"""
+        """Password."""
         return self._password
 
     @property
     def sessionid(self):
-        """SessionId"""
+        """SessionId."""
         return self._sessionid
+
+    @property
+    def sessionid_timestamp(self):
+        """Timestamp the session was created on."""
+        return self._sessionid_timestamp
 
     @staticmethod
     def _extract_thermostats_from_data(data: dict[str, Any]) -> dict[str, Any]:
@@ -61,7 +65,7 @@ class SchluterApi:
         return thermostats
 
     async def async_get_sessionid(self, username, password) -> Optional[str]:
-        """Validate the username and password for the Schluter API"""
+        """Validate the username and password for the Schluter API."""
 
         self._username = username
         self._password = password
@@ -82,6 +86,7 @@ class SchluterApi:
             _LOGGER.debug(
                 "Data retrieved from %s, status: %s", API_AUTH_URL, resp.status
             )
+            self._sessionid_timestamp = datetime.now()
             data = await resp.json()
 
         if data["SessionId"] == "":
@@ -97,7 +102,7 @@ class SchluterApi:
         return self._sessionid
 
     async def async_get_current_thermostats(self, sessionid) -> dict[str, Any]:
-        """Get the current settings for all thermostats"""
+        """Get the current settings for all thermostats."""
         if len(sessionid) == 0:
             raise InvalidSessionIdError("Invalid Session Id")
 
@@ -120,7 +125,7 @@ class SchluterApi:
         return self._extract_thermostats_from_data(data)
 
     async def async_set_temperature(self, sessionid, serialnumber, temperature) -> bool:
-        """Set the temperature for a thermostat"""
+        """Set the temperature for a thermostat."""
         if len(sessionid) == 0:
             raise InvalidSessionIdError("Invalid Session Id")
 
@@ -154,7 +159,7 @@ class SchluterApi:
 
 
 class ApiError(Exception):
-    """Raised when Schluter API request ended in error"""
+    """Raised when Schluter API request ended in error."""
 
     def __init__(self, status) -> None:
         """Initialize."""
@@ -163,7 +168,7 @@ class ApiError(Exception):
 
 
 class InvalidUserPasswordError(Exception):
-    """Raise when Username is incorrect"""
+    """Raise when Username is incorrect."""
 
     def __init__(self, status: str) -> None:
         """Initialize."""
@@ -172,7 +177,7 @@ class InvalidUserPasswordError(Exception):
 
 
 class InvalidSessionIdError(Exception):
-    """Raise when the Schluter Session Id is missing"""
+    """Raise when the Schluter Session Id is missing."""
 
     def __init__(self, status: str) -> None:
         """Initialize."""
