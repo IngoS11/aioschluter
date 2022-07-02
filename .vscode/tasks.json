@@ -5,7 +5,19 @@
       "label": "Pytest",
       "type": "shell",
       "command": "pytest",
-      "dependsOn": ["Install Test Requirements"],
+      "group": {
+        "kind": "test",
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Isort",
+      "type": "shell",
+      "command": "isort --line-width 88 --trailing-comma -m 3 --profile black aioschluter",
       "group": {
         "kind": "test",
       },
@@ -32,7 +44,6 @@
       "label": "Pylint",
       "type": "shell",
       "command": "pylint aioschluter tests",
-      "dependsOn": ["Install all Requirements"],
       "group": {
         "kind": "test"
       },
@@ -46,7 +57,6 @@
       "label": "Build Distribution Wheel",
       "type": "shell",
       "command": "python setup.py sdist bdist_wheel",
-      "dependsOn": ["Install all Requirements"],
       "group": {
         "kind": "build",
         "isDefault": true

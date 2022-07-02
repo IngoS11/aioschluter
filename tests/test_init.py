@@ -1,15 +1,12 @@
 """Tests for aioschluter package."""
 import json
+from datetime import datetime
 
 import pytest
 from aiohttp import ClientSession
-from aioresponses import aioresponses, CallbackResult
+from aioresponses import CallbackResult, aioresponses
 
-from aioschluter import (
-    InvalidUserPasswordError,
-    SchluterApi,
-    InvalidSessionIdError,
-)
+from aioschluter import InvalidSessionIdError, InvalidUserPasswordError, SchluterApi
 
 VALID_USERNAME = "valid_user@someplace.org"
 INVALID_USERNAME = "invalid_user@someplace.org"
@@ -43,6 +40,7 @@ async def test_valid_user():
     await websession.close()
     assert sessionid == "85j7W9xNTku1bqDb4SCnPA"
     assert schluter.sessionid == "85j7W9xNTku1bqDb4SCnPA"
+    assert isinstance(schluter.sessionid_timestamp, datetime)
 
 
 @pytest.mark.asyncio
