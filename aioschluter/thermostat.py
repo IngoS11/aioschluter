@@ -116,7 +116,3 @@ class Thermostat:
     def sw_version(self):
         """Software Version of the Thermostat."""
         return self._sw_version
-
-    @property
-    def kwh(self):
-        """Calculated kwh value"""
