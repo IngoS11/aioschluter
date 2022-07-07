@@ -7,7 +7,7 @@ from aiohttp import ClientSession
 from aioresponses import CallbackResult, aioresponses
 
 from aioschluter import InvalidSessionIdError, InvalidUserPasswordError, SchluterApi
-from aioschluter.const import HVAC_MODE_AUTO
+from aioschluter.const import HVAC_MODE_SCHEDULE
 
 VALID_USERNAME = "valid_user@someplace.org"
 INVALID_USERNAME = "invalid_user@someplace.org"
@@ -124,7 +124,7 @@ async def test_get_current_thermostats():
 
     await websession.close()
     assert thermostats["1084135"].name == "Bathroom"
-    assert thermostats["1084135"].regulation_mode == HVAC_MODE_AUTO
+    assert thermostats["1084135"].regulation_mode == HVAC_MODE_SCHEDULE
 
 
 def unauthorized_callback(url, **kwargs):
