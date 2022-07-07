@@ -12,7 +12,7 @@ with open("requirements_test.txt", encoding="utf-8") as file:
 
 setup(
     name="aioschluter",
-    version="0.1.6",
+    version="0.1.7",
     author="Ingo Sauerzapf ",
     description="Async Python wrapper for the Schluter-DITRA-E-WIFI thermostats API.",
     long_description=long_description,
