@@ -1,5 +1,6 @@
 """ A single instance of a Schluter Thermostat """
 
+
 class Thermostat:
     """A Schluter Thermostat"""
 
@@ -38,7 +39,7 @@ class Thermostat:
         self._support = data["Support"]
 
     def __repr__(self):
-        """ Print Method."""
+        """Print Method."""
         return f"Thermostat: {self._serial_number}, {self._name}"
 
     @property
@@ -119,4 +120,3 @@ class Thermostat:
     @property
     def kwh(self):
         """Calculated kwh value"""
-        
