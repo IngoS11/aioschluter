@@ -161,7 +161,7 @@ async def test_get_current_thermostats_with_wrong_sessionid():
 # @pytest.mark.asyncio
 # async def test_success_set_temperature():
 #   """ Test setting the temerature of a specific thermostat"""
-#   with open("tests/fixtures/temperature_set_data.json", encoding="utf-8") as file:
+#   with open("tests/fixtures/thermostat_set_data.json", encoding="utf-8") as file:
 #       success_data = json.load(file)
 #
 #   websession = ClientSession

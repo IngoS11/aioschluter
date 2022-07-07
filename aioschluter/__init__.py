@@ -10,7 +10,7 @@ from .const import (
     API_APPLICATION_ID,
     API_AUTH_URL,
     API_GET_THERMOSTATS_URL,
-    API_SET_TEMPERATURE_URL,
+    API_SET_THERMOSTAT_URL,
     HTTP_OK,
     HTTP_UNAUTHORIZED,
 )
@@ -134,7 +134,7 @@ class SchluterApi:
         params = {"sessionId": sessionid, "serialnumber": serialnumber}
 
         async with self._session.post(
-            API_SET_TEMPERATURE_URL,
+            API_SET_THERMOSTAT_URL,
             params=params,
             json={
                 "ManualTemperature": adjusted_temp,
@@ -151,7 +151,35 @@ class SchluterApi:
 
             _LOGGER.debug(
                 "Temperature set via %s, status: %s",
-                API_SET_TEMPERATURE_URL,
+                API_SET_THERMOSTAT_URL,
+                resp.status,
+            )
+            data = await resp.json()
+        return data["Success"]
+
+    async def async_set_regulation_mode(self, sessionid, serialnumber, mode) -> bool:
+        """set the regulation mode to SCHEDULE, MANUAL or AWAY"""
+        self._sessionid = sessionid
+        params = {"sessionId": sessionid, "serialnumber": serialnumber}
+
+        async with self._session.post(
+            API_SET_THERMOSTAT_URL,
+            params=params,
+            json={
+                "SerialNumber": serialnumber,
+                "RegulationMode": mode
+            }
+        ) as resp:
+            if resp.status == HTTP_UNAUTHORIZED:
+                raise InvalidSessionIdError(
+                    "An invalid or expired sessionid was supplied"
+                )
+            if resp.status != HTTP_OK:
+                raise ApiError(f"Invalid Response from Schluter API: {resp.status}")
+
+            _LOGGER.debug(
+                "HVAC mode set via %s, status: %s",
+                API_SET_THERMOSTAT_URL,
                 resp.status,
             )
             data = await resp.json()
