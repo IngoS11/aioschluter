@@ -41,6 +41,19 @@
       "problemMatcher": []
     },
     {
+      "label": "Black",
+      "type": "shell",
+      "command": "black aioschluter tests",
+      "group": {
+        "kind": "test"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "Pylint",
       "type": "shell",
       "command": "pylint aioschluter tests",
@@ -77,6 +90,6 @@
         "panel": "new"
       },
       "problemMatcher": []
-    }
+    }   
   ]
 }

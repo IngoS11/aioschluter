@@ -165,10 +165,7 @@ class SchluterApi:
         async with self._session.post(
             API_SET_THERMOSTAT_URL,
             params=params,
-            json={
-                "SerialNumber": serialnumber,
-                "RegulationMode": mode
-            }
+            json={"SerialNumber": serialnumber, "RegulationMode": mode},
         ) as resp:
             if resp.status == HTTP_UNAUTHORIZED:
                 raise InvalidSessionIdError(
