@@ -1,10 +1,10 @@
 """ A single instance of a Schluter Thermostat """
 
-
 class Thermostat:
     """A Schluter Thermostat"""
 
     def __init__(self, data):
+        """Initialize Thermostat."""
         self._serial_number = data["SerialNumber"]
         self._name = data["Room"]
         self._group_name = data["GroupName"]
@@ -38,74 +38,85 @@ class Thermostat:
         self._support = data["Support"]
 
     def __repr__(self):
+        """ Print Method."""
         return f"Thermostat: {self._serial_number}, {self._name}"
 
     @property
     def serial_number(self):
-        """Serial Number"""
+        """Serial Number."""
         return self._serial_number
 
     @property
     def name(self):
-        """Name"""
+        """Name."""
         return self._name
 
     @property
     def group_id(self):
-        """Group ID"""
+        """Group ID."""
         return self._group_id
 
     @property
     def group_name(self):
-        """Group Name"""
+        """Group Name."""
         return self._group_name
 
     @property
     def temperature(self):
-        """Temperature"""
+        """Temperature."""
         return round((self._temperature / 100) * 2) / 2
 
     @property
     def set_point_temp(self):
-        """Set Point Temperature"""
+        """Set Point Temperature."""
         return round((self._set_point_temp / 100) * 2) / 2
 
     @property
+    def regulation_mode(self):
+        """Regulation Mode."""
+        return self._regulation_mode
+
+    @property
     def manual_temp(self):
-        """Manual Temperature"""
+        """Manual Temperature."""
         return round((self._manual_temp / 100) * 2) / 2
 
     @property
     def is_online(self):
-        """Is Thermostat Online"""
+        """Is Thermostat Online."""
         return self._is_online
 
     @property
     def is_heating(self):
-        """Is Thermostat Heating"""
+        """Is Thermostat Heating."""
         return self._is_heating
 
     @property
     def max_temp(self):
-        """Maximum Temperature"""
+        """Maximum Temperature."""
         return round((self._max_temp / 100) * 2) / 2
 
     @property
     def min_temp(self):
-        """Minimum Temperature"""
+        """Minimum Temperature."""
         return round((self._min_temp / 100) * 2) / 2
 
     @property
     def kwh_charge(self):
-        """KwH Charge"""
+        """KwH Charge."""
         return self._kwh_charge
 
     @property
     def load_measured_watt(self):
-        """Measured Load in Watt"""
+        """Measured Load in Watt."""
         return self._load_measured_watt
 
     @property
     def sw_version(self):
-        """Software Version of the Thermostat"""
+        """Software Version of the Thermostat."""
         return self._sw_version
+
+    @property
+    def kwh(self):
+        """Calculated kwh value"""
+        
