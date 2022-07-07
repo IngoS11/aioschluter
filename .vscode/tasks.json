@@ -17,7 +17,7 @@
     {
       "label": "Isort",
       "type": "shell",
-      "command": "isort --line-width 88 --trailing-comma -m 3 --profile black aioschluter",
+      "command": "isort --line-width 88 --trailing-comma -m 3 --profile black .",
       "group": {
         "kind": "test",
       },

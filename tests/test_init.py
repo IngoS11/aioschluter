@@ -7,7 +7,6 @@ from aiohttp import ClientSession
 from aioresponses import CallbackResult, aioresponses
 
 from aioschluter import InvalidSessionIdError, InvalidUserPasswordError, SchluterApi
-
 from aioschluter.const import HVAC_MODE_AUTO
 
 VALID_USERNAME = "valid_user@someplace.org"
