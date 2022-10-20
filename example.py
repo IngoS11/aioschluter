@@ -10,8 +10,10 @@ from aioschluter import (
     SchluterApi,
 )
 
-## specify the username and password that you have on the Schluter DITRA-HEATER-E-WIFI
-## site at https://ditra-heat-e-wifi.schluter.com/
+###############################################################################
+## specify the username and password that you have on the Schluter
+## DITRA-HEATER-E-WIFI site at https://ditra-heat-e-wifi.schluter.com/
+###############################################################################
 SCHLUTER_USERNAME = "XXXX"
 SCHLUTER_PASSWORD = "XXXX"
 
